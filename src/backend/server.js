@@ -220,6 +220,31 @@ app.get('/api/profile', verifyToken, (req, res) => {
   });
 });
 
+// GET endpoint to search for a user by username
+app.get('/user/:username', (req, res) => {
+  const { username } = req.params;
+
+  const query = 'SELECT username, name, bio, profilePicture FROM users WHERE username = ?';
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Server error. Please try again.' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const user = results[0];
+    res.status(200).json({
+      username: user.username,
+      name: user.name,
+      bio: user.bio,
+      profilePicture: user.profilePicture,
+    });
+  });
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
