@@ -3,16 +3,12 @@ import mysql from 'mysql2';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import axios from 'axios';
+import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
-
-// Set the GROQ API key
-process.env.GROQ_API_KEY = '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';
 
 const app = express();
 const port = 5000;
@@ -26,21 +22,19 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Set up multer for image file upload with dynamic file name
+// Serve static files (profile pictures)
+app.use('/UserPFP', express.static(path.join(__dirname, 'UserPFP')));
+
+// Set up multer for handling profile picture upload
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const userPfpDir = path.join(__dirname, 'UserPFP'); // Directory for user profile pictures
-    if (!fs.existsSync(userPfpDir)) {
-      fs.mkdirSync(userPfpDir); // Create the directory if it doesn't exist
-    }
-    cb(null, userPfpDir); // Store files in the 'UserPFP' folder
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, 'UserPFP'));
   },
-  filename: (req, file, cb) => {
-    // Generate a temporary filename to save the file before inserting user into DB
-    cb(null, Date.now() + path.extname(file.originalname)); // Temporary unique filename
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 // MySQL Database connection
 const db = mysql.createConnection({
@@ -60,85 +54,123 @@ db.connect((err) => {
   console.log('Connected to MySQL as id ' + db.threadId);
 });
 
-// POST endpoint for chat interaction with GROQ API
-app.post('/chat', async (req, res) => {
-  const userMessage = req.body.message;
+// POST endpoint for user login
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
 
-  // Get the GROQ API key from environment variables
-  const groqApiKey = process.env.GROQ_API_KEY;
-
-  try {
-    const groqResponse = await axios.post(
-      'https://api.groq.com/openai/v1/chat/completions',
-      {
-        model: 'llama3-8b-8192',
-        messages: [
-          {
-            role: 'user',
-            content: userMessage,
-          },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${groqApiKey}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    const aiResponse = groqResponse.data.choices[0].message.content.trim();
-    console.log('AI Response:', aiResponse);
-    res.json({ reply: aiResponse });
-  } catch (error) {
-    console.error(
-      'Error communicating with GROQ API:',
-      error.response ? error.response.data : error.message
-    );
-    res.status(500).json({ error: 'Something went wrong with the server.' });
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required.' });
   }
+
+  const query = 'SELECT UserID, username, name, bio, profilePicture FROM users WHERE email = ? AND password = ?';
+  db.query(query, [email, password], (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Server error. Please try again.' });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    const user = results[0];
+    const profilePictureUrl = `http://localhost:5000/UserPFP/${user.UserID}.png`;
+
+    const token = jwt.sign({ UserID: user.UserID, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+
+    res.status(200).json({
+      message: 'Login successful!',
+      token,
+      user: {
+        UserID: user.UserID,
+        username: user.username,
+        name: user.name,
+        bio: user.bio,
+        profilePicture: profilePictureUrl,
+      },
+    });
+  });
 });
 
 // POST endpoint for user signup
 app.post('/signup', upload.single('profilePicture'), (req, res) => {
   const { username, email, password, name, bio } = req.body;
-  const profilePicture = req.file ? req.file.path : null; // Get the temporary file path if uploaded
 
-  // Validate required fields
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: 'Username, email, and password are required.' });
+  if (!username || !email || !password || !name) {
+    return res.status(400).json({ message: 'Username, email, password, and name are required.' });
   }
 
-  // Insert the new user into the database first
-  const query = 'INSERT INTO users (username, email, password, name, bio, profilePicture) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [username, email, password, name, bio, profilePicture];
-
-  db.query(query, values, (err, result) => {
+  const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+  db.query(checkEmailQuery, [email], (err, results) => {
     if (err) {
-      console.error('Error inserting user into database:', err);
-      return res.status(500).json({ message: 'Error signing up. Please try again.' });
+      return res.status(500).json({ message: 'Server error. Please try again.' });
     }
 
-    // After user is inserted, update the file with UserID
-    const userId = result.insertId; // Get the generated user ID
-    const newProfilePicPath = path.join(__dirname, 'UserPFP', `${userId}${path.extname(profilePicture)}`);
+    if (results.length > 0) {
+      return res.status(400).json({ message: 'Email is already registered.' });
+    }
 
-    // Rename the file to match the UserID
-    fs.rename(profilePicture, newProfilePicPath, (err) => {
+    const insertQuery = `
+      INSERT INTO users (username, email, password, name, bio)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    db.query(insertQuery, [username, email, password, name, bio], (err, results) => {
       if (err) {
-        console.error('Error renaming profile picture:', err);
-        return res.status(500).json({ message: 'Error saving profile picture. Please try again.' });
+        return res.status(500).json({ message: 'Error registering user. Please try again.' });
       }
 
-      // Update the user record with the new profile picture path
-      const updateQuery = 'UPDATE users SET profilePicture = ? WHERE UserID = ?';
-      db.query(updateQuery, [newProfilePicPath, UserId], (err) => {
-        if (err) {
-          console.error('Error updating profile picture in DB:', err);
-          return res.status(500).json({ message: 'Error saving profile picture. Please try again.' });
-        }
-        res.status(200).json({ message: 'Sign up successful!' });
+      const userId = results.insertId;
+
+      let profilePictureUrl = null;
+      if (req.file) {
+        profilePictureUrl = `http://localhost:5000/UserPFP/${req.file.filename}`;
+        const updateQuery = 'UPDATE users SET profilePicture = ? WHERE UserID = ?';
+        db.query(updateQuery, [profilePictureUrl, userId], (err) => {
+          if (err) {
+            console.error('Error updating profile picture:', err);
+          }
+        });
+      }
+
+      const token = jwt.sign({ UserID: userId, username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+
+      res.status(201).json({
+        message: 'User successfully registered!',
+        token,
+        user: {
+          UserID: userId,
+          username,
+          name,
+          bio,
+          profilePicture: profilePictureUrl,
+        },
       });
+    });
+  });
+});
+
+// GET endpoint for user profile by username
+app.get('/user/:username', (req, res) => {
+  const { username } = req.params;
+  console.log(`Searching for user with username: ${username}`);  // Log the username being searched
+
+  const query = 'SELECT username, name, bio, profilePicture FROM users WHERE LOWER(username) = LOWER(?)';
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);  // Log any database errors
+      return res.status(500).json({ message: 'Server error. Please try again.' });
+    }
+
+    if (results.length === 0) {
+      console.log('User not found in database');  // Log if the user is not found
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const user = results[0];
+    res.status(200).json({
+      username: user.username,
+      name: user.name,
+      bio: user.bio,
+      profilePicture: user.profilePicture,
     });
   });
 });

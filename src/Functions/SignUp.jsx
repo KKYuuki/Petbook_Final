@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Card, Button, Form } from 'react-bootstrap'; // Using React-Bootstrap components
-import '../Components/Profile.css'; // Assuming this file contains your card styling
+import { useNavigate } from 'react-router-dom'; // For redirecting after signup
+import './Css/Profile.css'; // Assuming this file contains your card styling
 
 const Signup = () => {
   // State to hold form input values
@@ -11,9 +12,17 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
+  const [error, setError] = useState('');
+  const navigate = useNavigate(); // For navigation after signup
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Form validation check (ensure all fields are filled)
+    if (!username || !email || !password || !name) {
+      setError('Please fill all required fields.');
+      return;
+    }
 
     // Create a FormData object to handle both text data and files
     const formData = new FormData();
@@ -34,12 +43,28 @@ const Signup = () => {
         },
       });
 
-      // Handle successful signup
+      // Handle successful signup and login
       alert(response.data.message);
+      const token = response.data.token;
+      localStorage.setItem('token', token); // Save token to local storage
+      localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user data to local storage
+
+      // Redirect to home page
+      navigate('/home');
     } catch (error) {
-      // Handle error
-      console.error(error);
-      alert('Error signing up. Please try again.');
+      console.error('Error:', error); // Log the error for debugging
+
+      // Check if the error response exists and handle it
+      if (error.response) {
+        console.error('Response Error:', error.response.data); // Log the error response from the backend
+        setError(error.response.data.message || 'Error signing up. Please try again.');
+      } else if (error.request) {
+        console.error('Request Error:', error.request); // Log the error request
+        setError('No response from server. Please try again later.');
+      } else {
+        console.error('General Error:', error.message); // Log any other general error
+        setError('An unexpected error occurred. Please try again.');
+      }
     }
   };
 
@@ -55,6 +80,7 @@ const Signup = () => {
         </Card.Header>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
+            {/* Username Field */}
             <Form.Group className="mb-3">
               <Form.Label>Username</Form.Label>
               <Form.Control
@@ -65,6 +91,8 @@ const Signup = () => {
                 placeholder="Enter your username"
               />
             </Form.Group>
+
+            {/* Email Field */}
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
               <Form.Control
@@ -75,6 +103,8 @@ const Signup = () => {
                 placeholder="Enter your email"
               />
             </Form.Group>
+
+            {/* Password Field */}
             <Form.Group className="mb-3">
               <Form.Label>Password</Form.Label>
               <Form.Control
@@ -85,15 +115,20 @@ const Signup = () => {
                 placeholder="Enter your password"
               />
             </Form.Group>
+
+            {/* Name Field */}
             <Form.Group className="mb-3">
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required
                 placeholder="Enter your full name"
               />
             </Form.Group>
+
+            {/* Bio Field */}
             <Form.Group className="mb-3">
               <Form.Label>Bio</Form.Label>
               <Form.Control
@@ -113,6 +148,9 @@ const Signup = () => {
                 accept="image/*" // Only allow image files
               />
             </Form.Group>
+
+            {/* Error message */}
+            {error && <div className="error-message">{error}</div>}
 
             <div className="text-center">
               <Button variant="primary" type="submit" className="profile-edit-button">

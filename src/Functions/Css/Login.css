@@ -1,0 +1,66 @@
+/* login.css */
+
+/* Container for centering the login form */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+/* Styling for the login card */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+/* Heading styling */
+h3 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Button styling for Login */
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+/* Styling for the Sign Up link (Button) */
+.signup-link {
+  font-size: 1rem;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Highlight the "Sign Up" button */
+.signup-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/* Add a "active" effect for when the user clicks the link */
+.signup-link:active {
+  color: #004085;
+}
+
+/* Form control styling */
+.form-control {
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Margin-top for the "Don't have an account?" link */
+.mt-3 {
+  margin-top: 15px;
+}

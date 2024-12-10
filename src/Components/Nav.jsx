@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Stack from "react-bootstrap/Stack";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom"; // No need for useNavigate if you want a refresh
 import "./Nav.css";
 
 function Nav() {
@@ -15,8 +15,15 @@ function Nav() {
   };
 
   const handleConfirmLogout = () => {
-    // Perform actual logout action here (e.g., clear session or redirect)
-    console.log("Logging out...");
+    // Clear user credentials from localStorage
+    localStorage.removeItem("user");
+
+    // Optionally update your app state if you use global state management
+    // Example: setIsAuthenticated(false); if isAuthenticated is managed in App component
+
+    // Refresh the page after logging out
+    window.location.reload(); // This will reload the current page
+
     setShowModal(false); // Close the modal after confirming logout
   };
 

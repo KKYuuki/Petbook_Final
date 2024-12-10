@@ -1,27 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button } from 'react-bootstrap';
-import '../Components/Profile.css'; // Make sure to import the updated CSS file
+import './Css/Profile.css';
 
 function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Simulating fetching profile data (replace with API call)
+  // Fetching the profile data
   useEffect(() => {
-    const fetchProfileData = () => {
-      const data = {
-        username: 'TantoBoy',
-        bio: 'A cutie and aggresive baby.',
-        profilePicture: 'https://example.com/path-to-profile-picture.jpg', // Replace with your image URL
-      };
-      setProfileData(data);
+    const fetchProfileData = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Assuming token is saved in localStorage after login
+        const response = await fetch('http://localhost:5000/api/profile', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in Authorization header
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile data');
+        }
+
+        const data = await response.json();
+        setProfileData(data);
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      } finally {
+        setLoading(false); // Set loading to false once the data is fetched
+      }
     };
 
     fetchProfileData();
   }, []);
 
   // Loading state
-  if (!profileData) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (!profileData) {
+    return <div>No profile data available</div>;
   }
 
   return (
@@ -29,7 +48,7 @@ function ProfilePage() {
       <Card className="profile-card">
         <Card.Header className="text-center">
           <img
-            src={profileData.profilePicture}
+            src={`http://localhost:5000/UserPFP/${profileData.profilePicture}`} // Assume the filename matches the UserID
             alt="Profile"
             className="profile-picture profile-paw-heart"
           />

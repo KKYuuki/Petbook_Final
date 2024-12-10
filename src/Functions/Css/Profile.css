@@ -1,0 +1,97 @@
+.profile-page {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  
+}
+
+.profile-card {
+  padding: 20px;
+  border-width: 0;
+  
+  /* background-color: rgba(11, 108, 113, 0.8); */
+}
+
+.profile-picture {
+  border-radius: 50%;
+  border: 3px solid #4E6C50;
+  
+  
+}
+
+.profile-paw-heart {
+  height: 80px;
+  width: 80px;
+  cursor: pointer;
+}
+
+.profile-petname {
+  display: flex;
+  justify-content: center;
+  font-size: 50px;
+  padding: 5px;
+  font-family: "Concert One", sans-serif;
+  color: black;
+}
+
+.profile-status {
+  margin-top: 2%;
+  font-size: x-large;
+  padding: 5px;
+  font-family: "Concert One", sans-serif;
+  color: black;
+  text-align: center;
+}
+
+.profile-post-caption {
+  height: 700px;
+  width: 500px;
+  margin-top: 20px;
+  border-radius: 30px;
+  background: linear-gradient(151deg, rgba(255, 255, 255, 1) 15%, rgba(101, 251, 255, 0.76) 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #333;
+}
+
+.profile-edit-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.profile-edit-button {
+  width: 200px;
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  background-color: rgba(13, 139, 144, 0.764);
+}
+
+.profile-edit-button:hover {
+  background-color: rgba(11, 108, 113, 0.8);
+}
+
+.signup-page {
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.profile-edit-button {
+  width: 100%;
+  margin-top: 20px;
+}
