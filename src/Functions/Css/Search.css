@@ -1,0 +1,34 @@
+.SearchT{
+    margin-top: 50px;
+    height: 800px;
+    width: 100%;
+    background: rgb(255,255,255);
+    background: linear-gradient(151deg, rgba(255,255,255,1) 15%, rgba(101,251,255,0.7637429971988796) 100%);
+    border-radius: 30px;
+    display: flex;
+}
+
+.SearchBar{
+
+    width: 80%;
+    height: 50px;
+    border-radius: 20px 0px 0px 20px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-style:solid;
+
+}
+
+.SearchButt{
+    height: 50px;
+    width: 15%;
+    margin-top: 20px;
+    border-radius: 0px 20px 20px 0;
+    border-style: none;
+    font-family: "Concert One", sans-serif;
+    font-style: normal;
+    color: black;
+    background-color: white;
+}

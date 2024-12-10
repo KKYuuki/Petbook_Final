@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&display=swap');
+
+.ButtonIcon{
+
+    height: 30px;
+    width: 30px;
+    margin-inline: 5px;
+    font-family: "Concert One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+}
+
+.AppName{
+    font-family: "Concert One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-left: 10px;
+
+}
+
+.NavButtons{
+    font-family: "Concert One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    border-color:transparent;
+    background-color: transparent;
+    /* justify-content: start; */
+    /* align-items: start; */
+    display: flex;
+    /* border-radius: 10px; */
+}
+
+.ButtonIconProfile{
+
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    margin-inline: 5px;
+
+}
+
+.NavButtons:hover{
+    background: rgb(255,255,255);
+    background: linear-gradient(151deg, rgba(255,255,255,1) 15%, rgba(101,251,255,0.7637429971988796) 100%);
+    border-radius: 10px;
+}
+
+
+.AppName2{
+    height: 60px;
+    width: 60px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+.Sticky{
+    position: fixed;
+   
+}
+
+.Sticky1{
+    position: fixed;
+    margin-top: 20px;
+  
+   
+}
+
+.ButtonIconProfile1{
+
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    margin-inline: 5px;
+
+}
+
+.petBook{
+    color: rgb(95, 231, 231);
+}
+
+.modal-backdrop {
+    z-index: 1040;
+  }
+  
+  .modal {
+    z-index: 1050;
+  }
+  
+  .modal-dialog {
+    margin: 30vh auto;
+    z-index: 1060;
+  }
+  
+  .btn-primary {
+    position: relative;
+    z-index: 1;
+  }
+  

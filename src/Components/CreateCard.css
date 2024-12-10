@@ -1,0 +1,107 @@
+.Container {
+  height: auto; /* Let the height adjust based on content */
+  width: 500px;
+  margin-top: 20px;
+  border-radius: 30px;
+  background: linear-gradient(151deg, rgba(255, 255, 255, 1) 15%, rgba(101, 251, 255, 0.76) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align content at the top */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  gap: 20px; /* Add spacing between elements */
+}
+
+.Header {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.ContainerCaption {
+  width: 100%; /* Full width of the container */
+  display: flex;
+  flex-direction: column; /* Stack the preview and button */
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Add spacing between preview and file input */
+}
+
+.ContainerPreview {
+  width: 100%; /* Full width inside the container */
+  height: 300px; /* Fixed height to avoid squeezing */
+  border: 2px dashed #ccc;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
+.PreviewImage {
+  width: 100%; /* Fully fill the container */
+  height: 100%;
+  object-fit: cover; /* Ensure proper scaling */
+  border-radius: 15px;
+}
+
+.PlaceholderText {
+  color: #aaa;
+  font-size: 18px;
+  text-align: center;
+  position: absolute;
+}
+
+.FileInput {
+  width: auto; /* Ensure it doesn’t take too much space */
+  margin-top: 10px;
+}
+
+.InputCaption {
+  width: 90%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  resize: none;
+  font-size: 16px;
+}
+
+.RemoveFileButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.RemoveFileButton:hover {
+  background-color: #c82333;
+}
+
+.ButtonContainer {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 20px; /* Add spacing between buttons */
+  width: 100%;
+  margin-top: 20px;
+}
+
+.SaveButton {
+  background-color: rgba(13, 139, 144, 0.764);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.SaveButton:hover {
+  background-color: rgba(11, 108, 113, 0.8);
+}
+

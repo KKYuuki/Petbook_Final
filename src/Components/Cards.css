@@ -1,0 +1,100 @@
+.Heart,.Comment{
+
+    height: 20px;
+    width: 20px;
+
+}
+
+.Card{
+    padding: 20px;
+    
+}
+
+.Petfeed{
+    height: 400px;
+    width: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+    border-radius: 30px;
+}
+
+.PostCaption{
+    height: 700px;
+    width: 500px;
+    margin-top: 20px;
+    border-radius: 30px;
+    background: rgb(255,255,255);
+    background: linear-gradient(151deg, rgba(255,255,255,1) 15%, rgba(101,251,255,0.7637429971988796) 100%);
+    display: inline-block;
+
+}
+
+.PostCaption1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.PawHeart{
+    height: 50px;
+    width: 50px;
+    cursor: pointer;  
+}
+.Status{
+    margin-top: 2%;
+    font-size: x-large;
+     padding: 5px;
+    font-family: "Concert One", sans-serif;
+    font-style: normal;
+    color: black;
+    justify-content: center;
+    align-items: center;
+}
+
+.Petname{
+    display: flex;
+    justify-content: center;
+    justify-content: center;
+    font-size: 50px;
+    padding: 5px;
+    font-family: "Concert One", sans-serif;
+    font-style: normal;
+    color: black;
+
+}
+
+.CommentSection{
+
+    display: block;
+    height: fit-content;
+    border-radius: 15px;
+
+}
+
+.Comment{
+    width: 80%;
+    border-radius: 15px 0 0 15px;
+    height: 50px;
+    border-style:none;
+
+}
+.CommentButt{
+    border-radius: 0px 15px 15px 0px;
+    height: 49px;
+    border-style:none;
+}
+
+.Comments{
+    margin-top: 5px;
+    margin-left: 40px;
+}
+
+.CommentSectionPhoto{
+    height: 40px;
+    width: 40px;
+    border-radius: 40px;
+    margin-right: 10px;
+    cursor: pointer;
+}

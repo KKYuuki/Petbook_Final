@@ -1,0 +1,54 @@
+.Notif{
+    margin-top: 50px;
+    height: 700px;
+    width: 100%;
+    background: rgb(255,255,255);
+    background: linear-gradient(151deg, rgba(255,255,255,1) 15%, rgba(101,251,255,0.7637429971988796) 100%);
+    border-radius: 30px;
+
+}
+
+
+.NotifIm{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.NotifIm1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+
+}
+
+.Notifs{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.NotifIm2{
+    height: 30px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Nf{
+    font-weight: 400;
+}
+
+
+.NotifIm3{
+
+    padding: 20px;
+
+}
