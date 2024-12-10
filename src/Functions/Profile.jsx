@@ -1,67 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button } from 'react-bootstrap';
 import './Css/Profile.css';
 
 function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetching the profile data
+  const backupData = {
+    username: "Practice3",
+    bio: "this is a practice dummy",
+    profilePicture: "/UserPFP/profilePicture-1733867955656.jpeg"
+  };  
+
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const token = localStorage.getItem('token'); // Assuming token is saved in localStorage after login
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+
         const response = await fetch('http://localhost:5000/api/profile', {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${token}`, // Send token in Authorization header
-          },
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
 
+        const data = await response.json();
         if (!response.ok) {
-          throw new Error('Failed to fetch profile data');
+          throw new Error(data.message || 'Failed to fetch profile data');
         }
 
-        const data = await response.json();
         setProfileData(data);
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
+        setError(null);
+      } catch (err) {
+        console.error('Error:', err);
+        setError(err.message);
+        setProfileData(backupData);
       } finally {
-        setLoading(false); // Set loading to false once the data is fetched
+        setLoading(false);
       }
     };
 
     fetchProfileData();
   }, []);
 
-  // Loading state
   if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!profileData) {
-    return <div>No profile data available</div>;
+    return (
+      <div className="profile-container">
+        <div className="profile-card">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="profile-page">
-      <Card className="profile-card">
-        <Card.Header className="text-center">
-          <img
-            src={`http://localhost:5000/UserPFP/${profileData.profilePicture}`} // Assume the filename matches the UserID
-            alt="Profile"
-            className="profile-picture profile-paw-heart"
-          />
-          <h3 className="profile-petname">{profileData.username}</h3>
-          <p className="profile-status">{profileData.bio}</p>
-          {/* Edit Profile Button */}
-          <div className="profile-edit-container">
-            <Button variant="primary" className="profile-edit-button">
-              Edit Profile
-            </Button>
-          </div>
-        </Card.Header>
-      </Card>
+    <div className="profile-container">
+      <div className="profile-card">
+        <span className="profile-label">Profile</span>
+        <div className="profile-content">
+          {profileData?.profilePicture ? (
+            <img 
+              src={profileData.profilePicture}
+              alt={profileData.username}
+              className="profile-image"
+            />
+          ) : (
+            <div className="profile-image-placeholder">
+              <span>{profileData?.username?.charAt(0)?.toUpperCase()}</span>
+            </div>
+          )}
+          <h1 className="profile-name">
+            {profileData?.username}
+          </h1>
+          <p className="profile-bio">
+            {profileData?.bio}
+          </p>
+          <button className="edit-profile-btn">
+            Edit Profile
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

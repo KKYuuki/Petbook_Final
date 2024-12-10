@@ -24,7 +24,7 @@ function App() {
     // Check if the user is authenticated (e.g., token exists in localStorage)
     const token = localStorage.getItem("token");
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    
+
     if (token && storedUser) {
       setIsAuthenticated(true);
       setUser(storedUser);
@@ -66,6 +66,8 @@ function App() {
                 <SuggestedPets />
               </Col>
             </Row>
+            {/* ChatBox will only appear for authenticated users */}
+            <ChatBox />
           </Container>
         ) : (
           <Routes>
@@ -75,7 +77,6 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}
-        <ChatBox />
       </div>
     </Router>
   );

@@ -54,6 +54,50 @@ db.connect((err) => {
   console.log('Connected to MySQL as id ' + db.threadId);
 });
 
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+};
+
+// GET endpoint for user's own profile
+app.get('/api/profile', verifyToken, (req, res) => {
+  const userId = req.user.UserID;
+
+  const query = 'SELECT username, name, bio, profilePicture FROM users WHERE UserID = ?';
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Server error. Please try again.' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Profile not found.' });
+    }
+
+    const user = results[0];
+    const profileData = {
+      username: user.username,
+      name: user.name,
+      bio: user.bio,
+      profilePicture: user.profilePicture
+    };
+
+    res.status(200).json(profileData);
+  });
+});
+
 // POST endpoint for user login
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -62,8 +106,8 @@ app.post('/login', (req, res) => {
     return res.status(400).json({ message: 'Email and password are required.' });
   }
 
-  const query = 'SELECT UserID, username, name, bio, profilePicture FROM users WHERE email = ? AND password = ?';
-  db.query(query, [email, password], (err, results) => {
+  const query = 'SELECT UserID, username, name, bio, profilePicture, password AS hashedPassword FROM users WHERE email = ?';
+  db.query(query, [email], (err, results) => {
     if (err) {
       return res.status(500).json({ message: 'Server error. Please try again.' });
     }
@@ -73,20 +117,24 @@ app.post('/login', (req, res) => {
     }
 
     const user = results[0];
-    const profilePictureUrl = `http://localhost:5000/UserPFP/${user.UserID}.png`;
+    bcrypt.compare(password, user.hashedPassword, (err, isMatch) => {
+      if (err || !isMatch) {
+        return res.status(401).json({ message: 'Invalid email or password.' });
+      }
 
-    const token = jwt.sign({ UserID: user.UserID, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+      const token = jwt.sign({ UserID: user.UserID, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
-    res.status(200).json({
-      message: 'Login successful!',
-      token,
-      user: {
-        UserID: user.UserID,
-        username: user.username,
-        name: user.name,
-        bio: user.bio,
-        profilePicture: profilePictureUrl,
-      },
+      res.status(200).json({
+        message: 'Login successful!',
+        token,
+        user: {
+          UserID: user.UserID,
+          username: user.username,
+          name: user.name,
+          bio: user.bio,
+          profilePicture: user.profilePicture,
+        },
+      });
     });
   });
 });
@@ -148,21 +196,18 @@ app.post('/signup', upload.single('profilePicture'), (req, res) => {
   });
 });
 
-// GET endpoint for user profile by username
-app.get('/user/:username', (req, res) => {
-  const { username } = req.params;
-  console.log(`Searching for user with username: ${username}`);  // Log the username being searched
-
-  const query = 'SELECT username, name, bio, profilePicture FROM users WHERE LOWER(username) = LOWER(?)';
-  db.query(query, [username], (err, results) => {
+app.get('/api/profile', verifyToken, (req, res) => {
+  const userId = req.user.UserID;
+  
+  const query = 'SELECT username, name, bio, profilePicture FROM users WHERE UserID = ?';
+  db.query(query, [userId], (err, results) => {
     if (err) {
-      console.error('Database error:', err);  // Log any database errors
+      console.error('Database error:', err);
       return res.status(500).json({ message: 'Server error. Please try again.' });
     }
 
     if (results.length === 0) {
-      console.log('User not found in database');  // Log if the user is not found
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'Profile not found.' });
     }
 
     const user = results[0];
@@ -170,7 +215,7 @@ app.get('/user/:username', (req, res) => {
       username: user.username,
       name: user.name,
       bio: user.bio,
-      profilePicture: user.profilePicture,
+      profilePicture: user.profilePicture
     });
   });
 });

@@ -64,7 +64,7 @@ function Nav() {
         </Link>
         <Link to="/profile" className="NavButtons">
           <div className="p-1">
-            <img className="ButtonIconProfile" src="/src/assets/img/R.jfif" alt="Profile" />
+            <img className="ButtonIconProfile" src="/src/backend/UserPFP/profilePicture-1733867955656.jpeg" alt="Profile" />
             PROFILE
           </div>
         </Link>

@@ -1,3 +1,10 @@
+/* Main container for the card */
+.create-card-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
 .Container {
   height: auto; /* Let the height adjust based on content */
   width: 500px;
@@ -13,11 +20,13 @@
   gap: 20px; /* Add spacing between elements */
 }
 
+/* Header of the card */
 .Header {
   font-size: 2.5rem;
   font-weight: bold;
 }
 
+/* Container for the caption and image preview */
 .ContainerCaption {
   width: 100%; /* Full width of the container */
   display: flex;
@@ -27,6 +36,7 @@
   gap: 10px; /* Add spacing between preview and file input */
 }
 
+/* Preview container for the image */
 .ContainerPreview {
   width: 100%; /* Full width inside the container */
   height: 300px; /* Fixed height to avoid squeezing */
@@ -40,6 +50,7 @@
   position: relative;
 }
 
+/* Style for the preview image */
 .PreviewImage {
   width: 100%; /* Fully fill the container */
   height: 100%;
@@ -47,6 +58,7 @@
   border-radius: 15px;
 }
 
+/* Placeholder text when no image is uploaded */
 .PlaceholderText {
   color: #aaa;
   font-size: 18px;
@@ -54,9 +66,19 @@
   position: absolute;
 }
 
+/* File input style */
 .FileInput {
   width: auto; /* Ensure it doesn’t take too much space */
   margin-top: 10px;
+}
+
+/* Caption text area */
+.InputCaptionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
 .InputCaption {
@@ -69,6 +91,34 @@
   font-size: 16px;
 }
 
+/* Describe photo button */
+.DescribeButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.DescribeButton:hover {
+  background-color: #0056b3;
+}
+
+/* Tooltip for describe photo button */
+.Tooltip {
+  font-size: 12px;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+  position: absolute;
+}
+
+/* Remove file button */
 .RemoveFileButton {
   background-color: #dc3545;
   color: white;
@@ -83,6 +133,7 @@
   background-color: #c82333;
 }
 
+/* Container for action buttons */
 .ButtonContainer {
   display: flex;
   justify-content: center; /* Center the buttons */
@@ -91,6 +142,7 @@
   margin-top: 20px;
 }
 
+/* Save button style */
 .SaveButton {
   background-color: rgba(13, 139, 144, 0.764);
   color: white;
@@ -105,3 +157,295 @@
   background-color: rgba(11, 108, 113, 0.8);
 }
 
+/* Modal Overlay */
+.ModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Container */
+.Modal {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 400px;
+  position: relative;
+  z-index: 1001;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Title */
+.Modal h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #333;
+}
+
+/* Modal Textarea */
+.ModalTextarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: none;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* Modal Buttons Container */
+.ModalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Modal Save Button */
+.ModalSaveButton {
+  background-color: #5FBFB8;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ModalSaveButton:hover {
+  background-color: #4DA8A2;
+}
+
+/* Modal Close Button */
+.ModalCloseButton {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ModalCloseButton:hover {
+  background-color: #5a6268;
+}
+
+/* Describe Photo Button */
+.DescribeButton {
+  background-color: #5FBFB8;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  width: 90%;
+}
+
+.DescribeButton:hover {
+  background-color: #4DA8A2;
+}
+
+/* Container adjustments */
+.Container {
+  position: relative;
+  z-index: 1;
+}
+
+.ContainerPreview {
+  z-index: 1;
+}
+
+/* Ensure proper layering */
+.create-card-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.PhotoDescriptionModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.ModalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+}
+
+.ModalContent h2 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+.DescriptionInput {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  resize: none;
+}
+
+.ModalButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.SaveDescriptionButton,
+.CloseButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.SaveDescriptionButton {
+  background: #5FBFB8;
+  color: white;
+}
+
+.CloseButton {
+  background: #6c757d;
+  color: white;
+}
+
+.FileInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.FileName {
+  color: #666;
+  font-size: 14px;
+}
+
+.Container {
+  background: linear-gradient(151deg, rgba(255,255,255,1) 15%, rgba(101,251,255,0.76) 100%);
+  border-radius: 30px;
+  padding: 30px;
+}
+
+.DescribeButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  width: 90%;
+  margin: 10px 0;
+}
+
+
+.FileInputContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.FileInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 90%;
+}
+
+.BrowseButton {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.FileInput {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.SelectedFileName {
+  color: #666;
+  font-size: 14px;
+}
+
+.RemoveFileButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.RemoveFileButton:hover {
+  background-color: #c82333;
+}
+
+.InputCaption {
+  width: 90%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  resize: none;
+  font-size: 16px;
+  overflow: auto;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.SelectedFileName {
+  color: #666;
+  font-size: 14px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.DescriptionInput {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: none;
+  margin-bottom: 15px;
+  font-size: 14px;
+  overflow: auto;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
